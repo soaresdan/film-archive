@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Film Archive</title>
+  <meta name="description" content="A personal archive of cinema, discoveries and favorites.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="site-shell">
+    <header class="masthead">
+      <div class="topline"><span>INDEPENDENT FILM DATABASE</span><span>EST. 2026</span></div>
+      <a class="brand" href="./">THE FILM ARCHIVE</a>
+      <p class="tagline">A personal collection of cinema, discoveries and favorites.</p>
+      <nav class="topnav"><a href="./">HOME</a><a href="#catalog">CATALOG</a><a href="#about">ABOUT</a></nav>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="sidebox">
+          <h2>SEARCH ARCHIVE</h2>
+          <input id="search" type="search" placeholder="Title, director, actor...">
+        </div>
+        <div class="sidebox">
+          <h2>COLLECTIONS</h2>
+          <button class="filter active" data-filter-type="collection" data-filter-value="all">All films</button>
+          <button class="filter" data-filter-type="collection" data-filter-value="favorites">Favorites</button>
+          <button class="filter" data-filter-type="collection" data-filter-value="archive">Personal Archive</button>
+        </div>
+        <div class="sidebox">
+          <h2>GENRES</h2>
+          <div id="genre-list" class="link-list"></div>
+        </div>
+        <div class="sidebox">
+          <h2>DECADES</h2>
+          <div id="decade-list" class="link-list"></div>
+        </div>
+        <div class="sidebox">
+          <h2>COUNTRIES</h2>
+          <div id="country-list" class="link-list"></div>
+        </div>
+        <div class="sidebox">
+          <h2>DIRECTORS</h2>
+          <div id="director-list" class="link-list"></div>
+        </div>
+      </aside>
+
+      <main id="catalog" class="content">
+        <div class="section-heading">
+          <div><div class="eyebrow">BROWSE THE COLLECTION</div><h1 id="view-title">All Films</h1></div>
+          <div class="sort-wrap"><label for="sort">SORT BY</label>
+            <select id="sort"><option value="added">Recently added</option><option value="year-desc">Year (newest)</option><option value="year-asc">Year (oldest)</option><option value="title">Title A–Z</option></select>
+          </div>
+        </div>
+        <div id="status" class="status">Loading catalogue…</div>
+        <div id="film-grid" class="film-grid"></div>
+        <section id="about" class="about">
+          <h2>ABOUT THIS ARCHIVE</h2>
+          <p>An independent, personally curated collection of films. Browse by collection, genre, decade, country or filmmaker.</p>
+          <p class="small">Film metadata and artwork belong to their respective owners. This archive is an independent, non-commercial project.</p>
+        </section>
+      </main>
+    </div>
+    <footer>THE FILM ARCHIVE <span>·</span> AN INDEPENDENT CINEMA DATABASE</footer>
+  </div>
+  <div id="modal" class="modal" aria-hidden="true">
+    <div class="modal-backdrop" data-close="1"></div>
+    <article class="detail-card">
+      <button class="close" data-close="1" aria-label="Close">×</button>
+      <div id="detail-content"></div>
+    </article>
+  </div>
+  <script src="config.js"></script>
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
