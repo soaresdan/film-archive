@@ -6,5 +6,5 @@
   Leave blank to use the sample films in data.js.
 */
 window.ARCHIVE_CONFIG = {
-  sheetCsvUrl: ""
+  sheetCsvUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTQS6JmLaKRRC2UEe-bKYer0AQrcjXE2mHR0sPMLOnKHahXLUa0fC-XjsOMWl5O4uBLDhndOa08OYza/pub?output=csv"
 };
