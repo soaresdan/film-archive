@@ -62,7 +62,7 @@ function formatRatings(f){
 function render(){
   const list=filtered(),grid=$("#film-grid");grid.innerHTML="";
   $("#status").textContent=`${list.length} film${list.length===1?"":"s"} in this view`;
-  list.forEach(f=>{const card=document.createElement("article");card.className="film-card";card.tabIndex=0;
+  list.forEach(f=>{const card=document.createElement("article");card.className="film-card";card.tabIndex=0;card.setAttribute("role","button");card.setAttribute("aria-label",`View details for ${f.title}`);
     const wrap=document.createElement("div");wrap.className="poster-wrap";
     if(f.poster){const img=document.createElement("img");img.className="poster";img.src=f.poster;img.alt=`${f.title} poster`;img.loading="lazy";img.onerror=()=>{img.remove();placeholder(wrap,f.title)};wrap.append(img)}
     else placeholder(wrap,f.title);
@@ -70,13 +70,15 @@ function render(){
     const title=document.createElement("div");title.className="film-title";title.textContent=f.title;
     const meta=document.createElement("div");meta.className="film-meta";meta.textContent=[f.year,f.country].filter(Boolean).join(" · ");
     const rating=document.createElement("div");rating.className="film-rating";rating.textContent=formatRatings(f);
-    card.append(wrap,title,meta,rating);card.onclick=()=>openFilm(f);card.onkeydown=e=>{if(e.key==="Enter")openFilm(f)};grid.append(card);
+    card.append(wrap,title,meta,rating);card.onclick=()=>openFilm(f);card.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();openFilm(f)}};grid.append(card);
   });
 }
 function placeholder(wrap,title){const p=document.createElement("div");p.className="poster-placeholder";p.textContent=title;wrap.append(p)}
 function field(label,value){if(!clean(value))return "";return `<p><strong>${label}:</strong> ${escapeHtml(value)}</p>`}
 function escapeHtml(s){return String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+let lastFocusedElement=null;
 function openFilm(f){
+  lastFocusedElement=document.activeElement;
   const poster=f.poster?`<img class="detail-poster" src="${escapeHtml(f.poster)}" alt="">`:`<div class="poster-placeholder">${escapeHtml(f.title)}</div>`;
   let links="";
   if(f.driveUrl)links+=`<a href="${escapeHtml(f.driveUrl)}" target="_blank" rel="noopener">ACCESS FILM ↗</a>`;
@@ -86,9 +88,9 @@ function openFilm(f){
   <div class="detail-section"><h3>SYNOPSIS</h3><p>${escapeHtml(f.synopsis||"Synopsis not added yet.")}</p></div>
   <div class="detail-section"><h3>FILM DETAILS</h3>${field("Director",f.director)}${field("Country",f.country)}${field("Genres",f.genres)}${field("Cast",f.cast)}${field("Screenplay",f.screenplay)}${field("Cinematography",f.cinematography)}${field("Music",f.music)}${field("IMDb rating",clean(f.imdbRating)?`${clean(f.imdbRating)}/10`:"")}${field("Letterboxd rating",clean(f.letterboxdRating)?`${clean(f.letterboxdRating)}/5`:"")}</div>
   <div class="detail-links">${links||"<span class='film-meta'>External links not added.</span>"}</div></div></div>`;
-  $("#modal").classList.add("open");$("#modal").setAttribute("aria-hidden","false");
+  $("#modal").classList.add("open");$("#modal").setAttribute("aria-hidden","false");document.body.classList.add("modal-open");$("#modal .close").focus();
 }
-function closeModal(){$("#modal").classList.remove("open");$("#modal").setAttribute("aria-hidden","true")}
+function closeModal(){if(!$("#modal").classList.contains("open"))return;$("#modal").classList.remove("open");$("#modal").setAttribute("aria-hidden","true");document.body.classList.remove("modal-open");if(lastFocusedElement?.isConnected)lastFocusedElement.focus()}
 document.querySelectorAll(".filter").forEach(b=>b.addEventListener("click",()=>setFilter("collection",b.dataset.filterValue)));
 $("#search").addEventListener("input",e=>{query=e.target.value.toLowerCase().trim();render()});
 $("#sort").addEventListener("change",render);
@@ -112,7 +114,7 @@ function closeFilters(){
   document.body.classList.remove('filters-open');
   filterOverlay.hidden=true;
   openFiltersButton.setAttribute('aria-expanded','false');
-  if(wasOpen) openFiltersButton.focus();
+  if(wasOpen && window.matchMedia('(max-width:620px)').matches) openFiltersButton.focus();
 }
 openFiltersButton.addEventListener('click',openFilters);
 closeFiltersButton.addEventListener('click',closeFilters);
@@ -127,3 +129,17 @@ document.querySelectorAll('.section-toggle').forEach(button=>{
 });
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeFilters()});
 window.matchMedia('(min-width:621px)').addEventListener('change',e=>{if(e.matches)closeFilters()});
+
+// Keep keyboard focus inside the active overlay.
+document.addEventListener('keydown',e=>{
+  if(e.key!=='Tab')return;
+  const modalOpen=document.querySelector('#modal').classList.contains('open');
+  const drawerOpen=document.body.classList.contains('filters-open');
+  const container=modalOpen?document.querySelector('.detail-card'):drawerOpen?filterDrawer:null;
+  if(!container)return;
+  const elements=[...container.querySelectorAll('a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),[tabindex]:not([tabindex="-1"])')].filter(el=>el.getClientRects().length);
+  if(!elements.length)return;
+  const first=elements[0],last=elements[elements.length-1];
+  if(e.shiftKey && (document.activeElement===first||!container.contains(document.activeElement))){e.preventDefault();last.focus()}
+  else if(!e.shiftKey && (document.activeElement===last||!container.contains(document.activeElement))){e.preventDefault();first.focus()}
+});

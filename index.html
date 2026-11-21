@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>The Film Archive</title>
   <meta name="description" content="A personal archive of cinema, discoveries and favorites.">
-  <link rel="stylesheet" href="style.css?v=ratings4">
+  <link rel="stylesheet" href="style.css?v=plum5">
 </head>
 <body>
   <div class="site-shell">
@@ -43,13 +43,14 @@
         <section id="about" class="about">
           <h2>ABOUT THIS ARCHIVE</h2>
           <p>An independent, personally curated collection of films. Browse by collection, genre, decade, country or filmmaker.</p>
+          <p class="small">This product uses the TMDB API but is not endorsed or certified by TMDB.</p>
           <p class="small">Film metadata and artwork belong to their respective owners. This archive is an independent, non-commercial project.</p>
         </section>
       </main>
     </div>
     <footer>THE FILM ARCHIVE <span>·</span> AN INDEPENDENT CINEMA DATABASE</footer>
   </div>
-  <div id="modal" class="modal" aria-hidden="true">
+  <div id="modal" class="modal" role="dialog" aria-modal="true" aria-label="Film details" aria-hidden="true">
     <div class="modal-backdrop" data-close="1"></div>
     <article class="detail-card">
       <button class="close" data-close="1" aria-label="Close">×</button>
@@ -58,6 +59,6 @@
   </div>
   <script src="config.js"></script>
   <script src="data.js"></script>
-  <script src="app.js?v=ratings4"></script>
+  <script src="app.js?v=plum5"></script>
 </body>
 </html>
