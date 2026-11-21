@@ -49,6 +49,16 @@ function filtered(){
   const sort=$("#sort").value;
   return list.sort((a,b)=>sort==="year-desc"?b.year-a.year:sort==="year-asc"?a.year-b.year:sort==="title"?a.title.localeCompare(b.title):0);
 }
+function formatRuntime(value){
+  const v=clean(value);
+  return v ? (/^\d+(?:\.\d+)?$/.test(v) ? `${v} mins` : v) : "";
+}
+function formatRatings(f){
+  const ratings=[];
+  if(clean(f.imdbRating)) ratings.push(`IMDb ★ ${clean(f.imdbRating)}/10`);
+  if(clean(f.letterboxdRating)) ratings.push(`Letterboxd ★ ${clean(f.letterboxdRating)}/5`);
+  return ratings.join(" · ");
+}
 function render(){
   const list=filtered(),grid=$("#film-grid");grid.innerHTML="";
   $("#status").textContent=`${list.length} film${list.length===1?"":"s"} in this view`;
@@ -59,7 +69,7 @@ function render(){
     const tag=document.createElement("span");tag.className="collection-tag";tag.textContent=f.collection==="favorites"?"FAVORITE":"ARCHIVE";wrap.append(tag);
     const title=document.createElement("div");title.className="film-title";title.textContent=f.title;
     const meta=document.createElement("div");meta.className="film-meta";meta.textContent=[f.year,f.country].filter(Boolean).join(" · ");
-    const rating=document.createElement("div");rating.className="film-rating";rating.textContent=f.imdbRating?`IMDb ★ ${f.imdbRating}`:"";
+    const rating=document.createElement("div");rating.className="film-rating";rating.textContent=formatRatings(f);
     card.append(wrap,title,meta,rating);card.onclick=()=>openFilm(f);card.onkeydown=e=>{if(e.key==="Enter")openFilm(f)};grid.append(card);
   });
 }
@@ -72,9 +82,9 @@ function openFilm(f){
   if(f.driveUrl)links+=`<a href="${escapeHtml(f.driveUrl)}" target="_blank" rel="noopener">ACCESS FILM ↗</a>`;
   if(f.imdbUrl)links+=`<a href="${escapeHtml(f.imdbUrl)}" target="_blank" rel="noopener">IMDb ↗</a>`;
   if(f.letterboxdUrl)links+=`<a href="${escapeHtml(f.letterboxdUrl)}" target="_blank" rel="noopener">LETTERBOXD ↗</a>`;
-  $("#detail-content").innerHTML=`<div class="detail-layout"><div>${poster}</div><div><div class="eyebrow">${escapeHtml(f.collection.toUpperCase())} · ${escapeHtml(f.country)}</div><h2 class="detail-title">${escapeHtml(f.title)}</h2><div class="detail-sub">${escapeHtml(f.originalTitle)} ${f.year?`(${f.year})`:""} · ${escapeHtml(f.runtime)}</div>
+  $("#detail-content").innerHTML=`<div class="detail-layout"><div>${poster}</div><div><div class="eyebrow">${escapeHtml(f.collection.toUpperCase())} · ${escapeHtml(f.country)}</div><h2 class="detail-title">${escapeHtml(f.title)}</h2><div class="detail-sub">${escapeHtml(f.originalTitle)} ${f.year?`(${f.year})`:""} ${formatRuntime(f.runtime)?` · ${escapeHtml(formatRuntime(f.runtime))}`:""}</div>
   <div class="detail-section"><h3>SYNOPSIS</h3><p>${escapeHtml(f.synopsis||"Synopsis not added yet.")}</p></div>
-  <div class="detail-section"><h3>FILM DETAILS</h3>${field("Director",f.director)}${field("Country",f.country)}${field("Genres",f.genres)}${field("Cast",f.cast)}${field("Screenplay",f.screenplay)}${field("Cinematography",f.cinematography)}${field("Music",f.music)}${field("IMDb rating",f.imdbRating)}${field("Letterboxd rating",f.letterboxdRating)}</div>
+  <div class="detail-section"><h3>FILM DETAILS</h3>${field("Director",f.director)}${field("Country",f.country)}${field("Genres",f.genres)}${field("Cast",f.cast)}${field("Screenplay",f.screenplay)}${field("Cinematography",f.cinematography)}${field("Music",f.music)}${field("IMDb rating",clean(f.imdbRating)?`${clean(f.imdbRating)}/10`:"")}${field("Letterboxd rating",clean(f.letterboxdRating)?`${clean(f.letterboxdRating)}/5`:"")}</div>
   <div class="detail-links">${links||"<span class='film-meta'>External links not added.</span>"}</div></div></div>`;
   $("#modal").classList.add("open");$("#modal").setAttribute("aria-hidden","false");
 }
