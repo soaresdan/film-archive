@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>The Film Archive</title>
   <meta name="description" content="A personal archive of cinema, discoveries and favorites.">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=sidebar3">
 </head>
 <body>
   <div class="site-shell">
@@ -16,48 +16,18 @@
       <nav class="topnav"><a href="./">HOME</a><a href="#catalog">CATALOG</a><a href="#about">ABOUT</a></nav>
     </header>
 
-    <div class="mobile-tools"><button id="open-sidebar" class="browse-toggle" type="button" aria-controls="archive-sidebar" aria-expanded="false">☰ &nbsp; BROWSE ARCHIVE <span>FILTERS ▸</span></button></div>
-    <div id="sidebar-overlay" class="sidebar-overlay" aria-hidden="true"></div>
     <div class="layout">
-      <aside class="sidebar" id="archive-sidebar" aria-label="Browse archive">
-        <div class="sidebar-mobile-head"><strong>BROWSE ARCHIVE</strong><button id="close-sidebar" type="button" aria-label="Close filters">×</button></div>
-        <div class="sidebox">
-          <h2><button type="button" class="section-toggle" aria-expanded="false">SEARCH ARCHIVE<span class="toggle-chevron" aria-hidden="true">▾</span></button></h2>
-          <div class="section-body">
-          <input id="search" type="search" placeholder="Title, director, actor...">
-          </div>
-        </div>
-        <div class="sidebox">
-          <h2><button type="button" class="section-toggle" aria-expanded="true">COLLECTIONS<span class="toggle-chevron" aria-hidden="true">▾</span></button></h2>
-          <div class="section-body">
-          <button class="filter active" data-filter-type="collection" data-filter-value="all">All films</button>
-          <button class="filter" data-filter-type="collection" data-filter-value="favorites">Favorites</button>
-          <button class="filter" data-filter-type="collection" data-filter-value="archive">Personal Archive</button>
-          </div>
-        </div>
-        <div class="sidebox">
-          <h2><button type="button" class="section-toggle" aria-expanded="false">GENRES<span class="toggle-chevron" aria-hidden="true">▾</span></button></h2>
-          <div class="section-body">
-          <div id="genre-list" class="link-list"></div>
-          </div>
-        </div>
-        <div class="sidebox">
-          <h2><button type="button" class="section-toggle" aria-expanded="false">DECADES<span class="toggle-chevron" aria-hidden="true">▾</span></button></h2>
-          <div class="section-body">
-          <div id="decade-list" class="link-list"></div>
-          </div>
-        </div>
-        <div class="sidebox">
-          <h2><button type="button" class="section-toggle" aria-expanded="false">COUNTRIES<span class="toggle-chevron" aria-hidden="true">▾</span></button></h2>
-          <div class="section-body">
-          <div id="country-list" class="link-list"></div>
-          </div>
-        </div>
-        <div class="sidebox">
-          <h2><button type="button" class="section-toggle" aria-expanded="false">DIRECTORS<span class="toggle-chevron" aria-hidden="true">▾</span></button></h2>
-          <div class="section-body">
-          <div id="director-list" class="link-list"></div>
-          </div>
+      <button id="open-filters" class="mobile-filter-toggle" type="button" aria-controls="archive-sidebar" aria-expanded="false"><span class="hamburger">☰</span> BROWSE ARCHIVE <span class="toggle-arrow">›</span></button>
+      <div id="sidebar-overlay" class="sidebar-overlay" hidden></div>
+      <aside id="archive-sidebar" class="sidebar" aria-label="Browse archive filters">
+        <div class="mobile-sidebar-heading"><span>BROWSE ARCHIVE</span><button id="close-filters" type="button" aria-label="Close filters">×</button></div>
+        <div class="sidebar-sections">
+          <section class="sidebox"><h2><button type="button" class="section-toggle" aria-expanded="true" aria-controls="section-search">SEARCH ARCHIVE <span class="chevron" aria-hidden="true"></span></button></h2><div id="section-search" class="section-body"><input id="search" type="search" placeholder="Title, director, actor..."></div></section>
+          <section class="sidebox"><h2><button type="button" class="section-toggle" aria-expanded="true" aria-controls="section-collections">COLLECTIONS <span class="chevron" aria-hidden="true"></span></button></h2><div id="section-collections" class="section-body"><button class="filter active" data-filter-type="collection" data-filter-value="all">All films</button><button class="filter" data-filter-type="collection" data-filter-value="favorites">Favorites</button><button class="filter" data-filter-type="collection" data-filter-value="archive">Personal Archive</button></div></section>
+          <section class="sidebox"><h2><button type="button" class="section-toggle" aria-expanded="false" aria-controls="section-genres">GENRES <span class="chevron" aria-hidden="true"></span></button></h2><div id="section-genres" class="section-body" hidden><div id="genre-list" class="link-list"></div></div></section>
+          <section class="sidebox"><h2><button type="button" class="section-toggle" aria-expanded="false" aria-controls="section-decades">DECADES <span class="chevron" aria-hidden="true"></span></button></h2><div id="section-decades" class="section-body" hidden><div id="decade-list" class="link-list"></div></div></section>
+          <section class="sidebox"><h2><button type="button" class="section-toggle" aria-expanded="false" aria-controls="section-countries">COUNTRIES <span class="chevron" aria-hidden="true"></span></button></h2><div id="section-countries" class="section-body" hidden><div id="country-list" class="link-list"></div></div></section>
+          <section class="sidebox"><h2><button type="button" class="section-toggle" aria-expanded="false" aria-controls="section-directors">DIRECTORS <span class="chevron" aria-hidden="true"></span></button></h2><div id="section-directors" class="section-body" hidden><div id="director-list" class="link-list"></div></div></section>
         </div>
       </aside>
 
@@ -88,6 +58,6 @@
   </div>
   <script src="config.js"></script>
   <script src="data.js"></script>
-  <script src="app.js"></script>
+  <script src="app.js?v=sidebar3"></script>
 </body>
 </html>

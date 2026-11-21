@@ -34,7 +34,7 @@ function buildSidebar(){
   const el=$("#decade-list");el.innerHTML="";
   decades.forEach(d=>{const wrap=document.createElement("div");const b=document.createElement("button");b.textContent=`${d}s`;b.onclick=()=>setFilter("decade",String(d));wrap.append(b);const years=[...new Set(films.filter(f=>Math.floor(f.year/10)*10===d).map(f=>f.year))].sort((a,b)=>b-a);years.forEach(y=>{const yb=document.createElement("button");yb.textContent=`  ${y}`;yb.style.paddingLeft="18px";yb.onclick=()=>setFilter("year",String(y));wrap.append(yb)});el.append(wrap)});
 }
-function setFilter(type,value){active={type,value};$("#view-title").textContent=value==="all"?"All Films":type==="collection"?(value==="favorites"?"Favorites":"Personal Archive"):value;document.querySelectorAll(".filter").forEach(b=>b.classList.toggle("active",b.dataset.filterValue===value&&type==="collection"));render()}
+function setFilter(type,value){closeFilters();active={type,value};$("#view-title").textContent=value==="all"?"All Films":type==="collection"?(value==="favorites"?"Favorites":"Personal Archive"):value;document.querySelectorAll(".filter").forEach(b=>b.classList.toggle("active",b.dataset.filterValue===value&&type==="collection"));render()}
 function filtered(){
   let list=films.filter(f=>{
     if(active.type==="collection"&&active.value!=="all"&&f.collection!==active.value)return false;
@@ -86,48 +86,34 @@ $("#modal").addEventListener("click",e=>{if(e.target.dataset.close)closeModal()}
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal()});
 (async()=>{films=await loadFilms();buildSidebar();render()})();
 
-// Responsive drawer and accordion navigation (independent of film loading).
-(function setupArchiveNavigation(){
-  const sidebar = document.querySelector('#archive-sidebar');
-  const overlay = document.querySelector('#sidebar-overlay');
-  const opener = document.querySelector('#open-sidebar');
-  const closer = document.querySelector('#close-sidebar');
-  const mobile = window.matchMedia('(max-width: 620px)');
-  function drawer(open){
-    sidebar.classList.toggle('is-open',open);
-    overlay.classList.toggle('is-open',open);
-    opener.setAttribute('aria-expanded',String(open));
-    overlay.setAttribute('aria-hidden',String(!open));
-    document.body.classList.toggle('sidebar-lock',open);
-    if(open)closer.focus();else opener.focus();
-  }
-  opener.addEventListener('click',()=>drawer(true));
-  closer.addEventListener('click',()=>drawer(false));
-  overlay.addEventListener('click',()=>drawer(false));
-  document.addEventListener('keydown',e=>{
-    if(e.key==='Escape' && sidebar.classList.contains('is-open'))drawer(false);
+// Responsive single-drawer navigation; original filtering logic is preserved.
+const filterDrawer = document.querySelector('#archive-sidebar');
+const filterOverlay = document.querySelector('#sidebar-overlay');
+const openFiltersButton = document.querySelector('#open-filters');
+const closeFiltersButton = document.querySelector('#close-filters');
+function openFilters(){
+  filterOverlay.hidden = false;
+  document.body.classList.add('filters-open');
+  openFiltersButton.setAttribute('aria-expanded','true');
+  closeFiltersButton.focus();
+}
+function closeFilters(){
+  const wasOpen=document.body.classList.contains('filters-open');
+  document.body.classList.remove('filters-open');
+  filterOverlay.hidden=true;
+  openFiltersButton.setAttribute('aria-expanded','false');
+  if(wasOpen) openFiltersButton.focus();
+}
+openFiltersButton.addEventListener('click',openFilters);
+closeFiltersButton.addEventListener('click',closeFilters);
+filterOverlay.addEventListener('click',closeFilters);
+document.querySelectorAll('.section-toggle').forEach(button=>{
+  button.addEventListener('click',()=>{
+    const body=document.getElementById(button.getAttribute('aria-controls'));
+    const expanded=button.getAttribute('aria-expanded')==='true';
+    button.setAttribute('aria-expanded',String(!expanded));
+    body.hidden=expanded;
   });
-  mobile.addEventListener('change',()=>{
-    if(!mobile.matches && sidebar.classList.contains('is-open'))drawer(false);
-  });
-  sidebar.querySelectorAll('.sidebox').forEach((box,index)=>{
-    const toggle=box.querySelector('.section-toggle');
-    const body=box.querySelector('.section-body');
-    if(!toggle || !body)return;
-    const id='archive-section-'+index;
-    body.id=id;
-    toggle.setAttribute('aria-controls',id);
-    // Desktop starts expanded; mobile starts with Collections expanded.
-    const collapsed=mobile.matches && index!==1;
-    box.classList.toggle('is-collapsed',collapsed);
-    toggle.setAttribute('aria-expanded',String(!collapsed));
-    toggle.addEventListener('click',()=>{
-      const next=!box.classList.contains('is-collapsed');
-      box.classList.toggle('is-collapsed',next);
-      toggle.setAttribute('aria-expanded',String(!next));
-    });
-  });
-  sidebar.addEventListener('click',e=>{
-    if(mobile.matches && e.target.closest('.filter,.link-list button'))drawer(false);
-  });
-})();
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeFilters()});
+window.matchMedia('(min-width:621px)').addEventListener('change',e=>{if(e.matches)closeFilters()});
