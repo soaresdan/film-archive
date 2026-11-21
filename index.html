@@ -16,33 +16,48 @@
       <nav class="topnav"><a href="./">HOME</a><a href="#catalog">CATALOG</a><a href="#about">ABOUT</a></nav>
     </header>
 
+    <div class="mobile-tools"><button id="open-sidebar" class="browse-toggle" type="button" aria-controls="archive-sidebar" aria-expanded="false">☰ &nbsp; BROWSE ARCHIVE <span>FILTERS ▸</span></button></div>
+    <div id="sidebar-overlay" class="sidebar-overlay" aria-hidden="true"></div>
     <div class="layout">
-      <aside class="sidebar">
+      <aside class="sidebar" id="archive-sidebar" aria-label="Browse archive">
+        <div class="sidebar-mobile-head"><strong>BROWSE ARCHIVE</strong><button id="close-sidebar" type="button" aria-label="Close filters">×</button></div>
         <div class="sidebox">
-          <h2>SEARCH ARCHIVE</h2>
+          <h2><button type="button" class="section-toggle" aria-expanded="false">SEARCH ARCHIVE<span class="toggle-chevron" aria-hidden="true">▾</span></button></h2>
+          <div class="section-body">
           <input id="search" type="search" placeholder="Title, director, actor...">
+          </div>
         </div>
         <div class="sidebox">
-          <h2>COLLECTIONS</h2>
+          <h2><button type="button" class="section-toggle" aria-expanded="true">COLLECTIONS<span class="toggle-chevron" aria-hidden="true">▾</span></button></h2>
+          <div class="section-body">
           <button class="filter active" data-filter-type="collection" data-filter-value="all">All films</button>
           <button class="filter" data-filter-type="collection" data-filter-value="favorites">Favorites</button>
           <button class="filter" data-filter-type="collection" data-filter-value="archive">Personal Archive</button>
+          </div>
         </div>
         <div class="sidebox">
-          <h2>GENRES</h2>
+          <h2><button type="button" class="section-toggle" aria-expanded="false">GENRES<span class="toggle-chevron" aria-hidden="true">▾</span></button></h2>
+          <div class="section-body">
           <div id="genre-list" class="link-list"></div>
+          </div>
         </div>
         <div class="sidebox">
-          <h2>DECADES</h2>
+          <h2><button type="button" class="section-toggle" aria-expanded="false">DECADES<span class="toggle-chevron" aria-hidden="true">▾</span></button></h2>
+          <div class="section-body">
           <div id="decade-list" class="link-list"></div>
+          </div>
         </div>
         <div class="sidebox">
-          <h2>COUNTRIES</h2>
+          <h2><button type="button" class="section-toggle" aria-expanded="false">COUNTRIES<span class="toggle-chevron" aria-hidden="true">▾</span></button></h2>
+          <div class="section-body">
           <div id="country-list" class="link-list"></div>
+          </div>
         </div>
         <div class="sidebox">
-          <h2>DIRECTORS</h2>
+          <h2><button type="button" class="section-toggle" aria-expanded="false">DIRECTORS<span class="toggle-chevron" aria-hidden="true">▾</span></button></h2>
+          <div class="section-body">
           <div id="director-list" class="link-list"></div>
+          </div>
         </div>
       </aside>
 
